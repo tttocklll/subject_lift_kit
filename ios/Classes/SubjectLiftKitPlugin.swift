@@ -11,7 +11,7 @@ public class SubjectLiftKitPlugin: NSObject, FlutterPlugin {
 class SubjectLiftApiImpl: SubjectLiftApi {
   func extractForeground(imageData: ImageData, completion: @escaping (Result<SegmentationResult, Error>) -> Void) {
     // Convert data to UIImage
-    guard let uiImage = UIImage(data: imageData.imageBytes) else {
+    guard let uiImage = UIImage(data: imageData.imageBytes.data) else {
       let result = SegmentationResult(
         maskImageBytes: nil,
         cutoutImageBytes: nil,
@@ -78,10 +78,12 @@ class SubjectLiftApiImpl: SubjectLiftApi {
         let context = CIContext()
         
         // Generate mask image data
-        var maskImageData: Data?
+        var maskImageData: FlutterStandardTypedData?
         if let cgImage = context.createCGImage(maskCIImage, from: maskCIImage.extent) {
           let maskUIImage = UIImage(cgImage: cgImage)
-          maskImageData = maskUIImage.pngData()
+          if let pngData = maskUIImage.pngData() {
+            maskImageData = FlutterStandardTypedData(bytes: pngData)
+          }
         }
         
         // Generate cutout image
@@ -93,7 +95,7 @@ class SubjectLiftApiImpl: SubjectLiftApi {
         
         let result = SegmentationResult(
           maskImageBytes: maskImageData,
-          cutoutImageBytes: cutoutImageData,
+          cutoutImageBytes: cutoutImageData.map { FlutterStandardTypedData(bytes: $0) },
           error: nil
         )
         completion(.success(result))
