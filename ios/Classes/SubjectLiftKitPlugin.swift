@@ -22,17 +22,6 @@ class SubjectLiftApiImpl: SubjectLiftApi {
       return
     }
     
-    // Check image size
-    let maxSize: CGFloat = 4096
-    if uiImage.size.width > maxSize || uiImage.size.height > maxSize {
-      let result = SegmentationResult(
-        maskImageBytes: nil,
-        cutoutImageBytes: nil,
-        error: "Image size too large. Maximum size is \(Int(maxSize))x\(Int(maxSize)) pixels"
-      )
-      completion(.success(result))
-      return
-    }
     
     // Fix orientation if needed
     let fixedImage = fixImageOrientation(uiImage)
