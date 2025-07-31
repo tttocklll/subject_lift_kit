@@ -1,5 +1,6 @@
 import Flutter
 import Vision
+import UIKit
 
 public class SubjectLiftKitPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
@@ -33,8 +34,11 @@ class SubjectLiftApiImpl: SubjectLiftApi {
       return
     }
     
+    // Fix orientation if needed
+    let fixedImage = fixImageOrientation(uiImage)
+    
     // Convert to CIImage
-    guard let ciImage = CIImage(image: uiImage) else {
+    guard let ciImage = CIImage(image: fixedImage) else {
       let result = SegmentationResult(
         maskImageBytes: nil,
         cutoutImageBytes: nil,
@@ -138,5 +142,18 @@ class SubjectLiftApiImpl: SubjectLiftApi {
     }
     
     return UIImage(cgImage: cgOutput).pngData()
+  }
+  
+  private func fixImageOrientation(_ image: UIImage) -> UIImage {
+    if image.imageOrientation == .up {
+      return image
+    }
+    
+    UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale)
+    image.draw(in: CGRect(origin: .zero, size: image.size))
+    let normalizedImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    
+    return normalizedImage ?? image
   }
 }
