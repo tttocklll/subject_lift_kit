@@ -8,6 +8,10 @@ A Flutter plugin for extracting foreground objects from images using iOS Vision 
 - 🖼️ Generate transparent background cutouts
 - 📱 iOS 17.0+ support using Apple's Vision Framework
 
+## Example
+
+![example](https://github.com/user-attachments/assets/a0295d28-01c4-4f19-8c38-934f998dc6e0)
+
 ## Requirements
 
 - iOS 17.0 or later
