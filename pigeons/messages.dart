@@ -3,7 +3,7 @@ import 'package:pigeon/pigeon.dart';
 @ConfigurePigeon(
   PigeonOptions(
     dartPackageName: "subject_lift_kit",
-    dartOut: 'lib/src/messages.g.dart',
+    dartOut: 'lib/gen/messages.g.dart',
     dartOptions: DartOptions(),
     swiftOut: 'ios/Classes/Messages.g.swift',
     swiftOptions: SwiftOptions(),
