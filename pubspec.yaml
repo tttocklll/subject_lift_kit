@@ -1,5 +1,5 @@
 name: subject_lift_kit
-description: "A new Flutter plugin project."
+description: "A Flutter plugin for subject lifting using Apple's Vision Framework."
 version: 0.0.1
 homepage: https://github.com/tttocklll/subject_lift_kit
 
