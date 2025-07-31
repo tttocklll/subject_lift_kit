@@ -7,9 +7,6 @@ A Flutter plugin for extracting foreground objects from images using iOS Vision 
 - 🎯 Extract foreground objects from images (people, animals, objects)
 - 🖼️ Generate transparent background cutouts
 - 📱 iOS 17.0+ support using Apple's Vision Framework
-- 🔄 Automatic image orientation handling
-- 🛡️ Type-safe API using Pigeon
-- ⚡ Simple, lightweight implementation
 
 ## Requirements
 
@@ -162,8 +159,6 @@ Exception thrown when subject lifting operations fail.
 - **iOS Only**: Currently only supports iOS platform
 - **iOS 17.0+**: Requires iOS 17.0 or later
 - **Physical Device**: Does not work on iOS Simulator
-- **Image Size**: Maximum recommended image size is 4096x4096 pixels
-- **Performance**: Processing time depends on image size and complexity
 
 ## Contributing
 
@@ -171,7 +166,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the BSD 3-Clause License - see the [LICENSE](LICENSE) file for details.
 
 ## Credits
 
