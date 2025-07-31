@@ -1,7 +1,5 @@
 import Flutter
-import UIKit
 import Vision
-import CoreImage
 
 public class SubjectLiftKitPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
@@ -87,15 +85,11 @@ class SubjectLiftApiImpl: SubjectLiftApi {
         }
         
         // Generate cutout image
-        var cutoutImageData: Data?
-        if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
-          let originalImage = UIImage(cgImage: cgImage)
-          
-          // Apply mask to original image
-          if let cutoutImage = applyMask(to: originalImage, mask: maskCIImage, context: context) {
-            cutoutImageData = cutoutImage.pngData()
-          }
-        }
+        let cutoutImageData = applyMaskAndGeneratePNG(
+          originalCIImage: ciImage,
+          maskCIImage: maskCIImage,
+          context: context
+        )
         
         let result = SegmentationResult(
           maskImageBytes: maskImageData,
@@ -122,17 +116,18 @@ class SubjectLiftApiImpl: SubjectLiftApi {
     }
   }
   
-  private func applyMask(to image: UIImage, mask: CIImage, context: CIContext) -> UIImage? {
-    guard let cgImage = image.cgImage else { return nil }
-    let ciImage = CIImage(cgImage: cgImage)
-    
+  private func applyMaskAndGeneratePNG(
+    originalCIImage: CIImage,
+    maskCIImage: CIImage,
+    context: CIContext
+  ) -> Data? {
     // Create a filter to apply the mask
     guard let filter = CIFilter(name: "CIBlendWithMask") else { return nil }
-    filter.setValue(ciImage, forKey: kCIInputImageKey)
-    filter.setValue(mask, forKey: kCIInputMaskImageKey)
+    filter.setValue(originalCIImage, forKey: kCIInputImageKey)
+    filter.setValue(maskCIImage, forKey: kCIInputMaskImageKey)
     
     // Create transparent background
-    let transparent = CIImage(color: CIColor.clear).cropped(to: ciImage.extent)
+    let transparent = CIImage(color: CIColor.clear).cropped(to: originalCIImage.extent)
     filter.setValue(transparent, forKey: kCIInputBackgroundImageKey)
     
     guard let outputImage = filter.outputImage,
@@ -140,6 +135,6 @@ class SubjectLiftApiImpl: SubjectLiftApi {
       return nil
     }
     
-    return UIImage(cgImage: cgOutput)
+    return UIImage(cgImage: cgOutput).pngData()
   }
 }
